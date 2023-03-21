@@ -1,0 +1,9 @@
+{
+  "subscriptions": [
+    {
+      "email": "foo.bar@gmail.com",
+      "firstName": "foo",
+      "lastName": "bar"
+    }
+  ]
+}
