@@ -5,25 +5,21 @@ import Select from "./components/UI/form/Select";
 import {useForm} from "react-hook-form";
 import SubscriptionService from "./services/subscription.service";
 import Button from './components/UI/form/Button';
-
-interface SubscriptionFormData {
-  firstName: string
-  lastName: string
-  emailAddress: string
-  country: string
-}
+import { v4 as uuidv4 } from 'uuid'
+import {Subscription} from "./types/types";
 
 function App() {
-  const { register, handleSubmit, reset,  formState: { errors } } = useForm<SubscriptionFormData>()
+  const { register, handleSubmit, reset,  formState: { errors } } = useForm<Subscription>()
   const EMAIL_PATTERN = /^\w+(-?\w+)*@\w+(-?\w+)*(\.\w{2,3})+$/
   const countryOptions = ["Canada", "Mexico", "India"]
   const [loading, setLoading] = useState<boolean>(false)
 
-  const onSubmit = (data: SubscriptionFormData) => {
+  const onSubmit = (data: Subscription) => {
     setLoading(true)
     const { firstName, lastName, country, emailAddress } = data
 
     SubscriptionService.save({
+      id: uuidv4(),
       firstName,
       lastName,
       country,

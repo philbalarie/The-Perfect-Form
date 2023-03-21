@@ -5,7 +5,6 @@ import {ExclamationCircleIcon} from "@heroicons/react/20/solid";
 
 interface SelectProps extends FormProps {
     options: string[]
-
 }
 
 const Select: React.FC<SelectProps> = props => {

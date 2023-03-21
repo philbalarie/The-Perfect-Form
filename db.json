@@ -4,6 +4,20 @@
       "email": "foo.bar@gmail.com",
       "firstName": "foo",
       "lastName": "bar"
+    },
+    {
+      "id": 1,
+      "firstName": "asdsad",
+      "lastName": "Alarie",
+      "country": "canada",
+      "emailAddress": "philbalarie@gmail.com"
+    },
+    {
+      "id": "9a080ba1-192b-4585-9638-ca92fbecfa22",
+      "firstName": "asdasd",
+      "lastName": "asdas",
+      "country": "bob",
+      "emailAddress": "philbalarie@gmail.com"
     }
   ]
 }

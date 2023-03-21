@@ -1,6 +1,7 @@
 import {FieldError, UseFormRegisterReturn} from "react-hook-form";
 
 export interface Subscription {
+    id?: string
     firstName: string
     lastName: string
     emailAddress: string
