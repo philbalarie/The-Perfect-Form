@@ -1,14 +1,46 @@
-import React from 'react';
+import React, {useState} from 'react';
 import Input from './components/UI/form/Input';
 import {EMAIL, TEXT} from "./constants/formTypes";
 import Select from "./components/UI/form/Select";
+import {useForm} from "react-hook-form";
+import SubscriptionService from "./services/subscription.service";
+import Button from './components/UI/form/Button';
+
+interface SubscriptionFormData {
+  firstName: string
+  lastName: string
+  emailAddress: string
+  country: string
+}
 
 function App() {
+  const { register, handleSubmit, reset,  formState: { errors } } = useForm<SubscriptionFormData>()
+  const EMAIL_PATTERN = /^\w+(-?\w+)*@\w+(-?\w+)*(\.\w{2,3})+$/
   const countryOptions = ["Canada", "Mexico", "India"]
+  const [loading, setLoading] = useState<boolean>(false)
+
+  const onSubmit = (data: SubscriptionFormData) => {
+    setLoading(true)
+    const { firstName, lastName, country, emailAddress } = data
+
+    SubscriptionService.save({
+      firstName,
+      lastName,
+      country,
+      emailAddress
+    }).then(_ => {
+      reset()
+      setLoading(false)
+    }).catch(err => {
+      console.log(err.message)
+      setLoading(false)
+    })
+
+  }
 
   return (
       <div className="flex justify-center my-10 bg bg-white">
-        <form className="space-y-8 divide-y divide-gray-200">
+        <form className="space-y-8 divide-y divide-gray-200" onSubmit={handleSubmit(onSubmit)}>
           <div className="space-y-8 divide-y divide-gray-200">
             <div className="pt-8">
               <div>
@@ -17,19 +49,19 @@ function App() {
               </div>
               <div className="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
                 <div className={"sm:col-span-3"}>
-                  <Input type={TEXT} label={"First name"} />
+                  <Input type={TEXT} label={"First name"} register={register("firstName", { required: "First name is required" })} error={errors.firstName} />
                 </div>
 
                 <div className="sm:col-span-3">
-                  <Input type={TEXT} label={"Last name"} />
+                  <Input type={TEXT} label={"Last name"} register={register("lastName", { required: "Last name is required" })} error={errors.lastName} />
                 </div>
 
                 <div className="sm:col-span-4">
-                  <Input type={EMAIL} label={"Email address"} />
+                  <Input type={EMAIL} label={"Email address"} register={register("emailAddress", { required: "Email Address is required", pattern: { value: EMAIL_PATTERN, message: "Email address is not valid" } }) } error={errors.emailAddress} />
                 </div>
 
                 <div className="sm:col-span-3">
-                  <Select label={"Country"} options={countryOptions} />
+                  <Select label={"Country"} options={countryOptions} register={register("country", { required: "Country is required"})} error={errors.country} />
                 </div>
               </div>
             </div>
@@ -143,18 +175,7 @@ function App() {
 
           <div className="pt-5">
             <div className="flex justify-end">
-              <button
-                  type="button"
-                  className="rounded-md bg-white py-2 px-3 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
-              >
-                Cancel
-              </button>
-              <button
-                  type="submit"
-                  className="ml-3 inline-flex justify-center rounded-md bg-indigo-600 py-2 px-3 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-              >
-                Save
-              </button>
+                <Button loading={loading} />
             </div>
           </div>
         </form>
