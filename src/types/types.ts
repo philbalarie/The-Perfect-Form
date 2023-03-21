@@ -9,6 +9,7 @@ export interface Subscription {
 
 export interface FormProps {
     label: string
+    required?: boolean
     register: UseFormRegisterReturn<string>
     error: FieldError | undefined
 }

@@ -49,19 +49,19 @@ function App() {
               </div>
               <div className="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
                 <div className={"sm:col-span-3"}>
-                  <Input type={TEXT} label={"First name"} register={register("firstName", { required: "First name is required" })} error={errors.firstName} />
+                  <Input type={TEXT} label={"First name"} register={register("firstName", { required: "First name is required" })} error={errors.firstName} required={true} />
                 </div>
 
                 <div className="sm:col-span-3">
-                  <Input type={TEXT} label={"Last name"} register={register("lastName", { required: "Last name is required" })} error={errors.lastName} />
+                  <Input type={TEXT} label={"Last name"} register={register("lastName", { required: "Last name is required" })} error={errors.lastName} required={true} />
                 </div>
 
                 <div className="sm:col-span-4">
-                  <Input type={EMAIL} label={"Email address"} register={register("emailAddress", { required: "Email Address is required", pattern: { value: EMAIL_PATTERN, message: "Email address is not valid" } }) } error={errors.emailAddress} />
+                  <Input type={EMAIL} label={"Email address"} register={register("emailAddress", { required: "Email Address is required", pattern: { value: EMAIL_PATTERN, message: "Email address is not valid" } }) } error={errors.emailAddress} required={true} />
                 </div>
 
                 <div className="sm:col-span-3">
-                  <Select label={"Country"} options={countryOptions} register={register("country", { required: "Country is required"})} error={errors.country} />
+                  <Select label={"Country"} options={countryOptions} register={register("country", { required: "Country is required"})} error={errors.country} required={true} />
                 </div>
               </div>
             </div>
