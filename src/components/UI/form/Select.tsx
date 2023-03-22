@@ -1,16 +1,16 @@
-import React from 'react';
-import { capitalize, kebabCase } from 'lodash';
-import { type FormProps } from '../../../types/types';
-import { ExclamationCircleIcon } from '@heroicons/react/20/solid';
+import React from 'react'
+import { capitalize, kebabCase } from 'lodash'
+import { type FormProps } from '../../../types/types'
+import { ExclamationCircleIcon } from '@heroicons/react/20/solid'
 
 interface SelectProps extends FormProps {
-  options: string[];
+  options: string[]
 }
 
 const Select: React.FC<SelectProps> = (props) => {
-  const name = kebabCase(props.label);
+  const name = kebabCase(props.label)
   // Adapt color of the input depending on the error
-  const color = props.error != null ? 'red' : 'gray';
+  const color = props.error != null ? 'red' : 'gray'
 
   return (
     <>
@@ -45,7 +45,7 @@ const Select: React.FC<SelectProps> = (props) => {
         </p>
       )}
     </>
-  );
-};
+  )
+}
 
-export default Select;
+export default Select

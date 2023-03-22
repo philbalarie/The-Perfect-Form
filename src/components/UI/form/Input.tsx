@@ -1,16 +1,16 @@
-import React from 'react';
-import { capitalize, kebabCase } from 'lodash';
-import { type FormProps } from '../../../types/types';
-import { ExclamationCircleIcon } from '@heroicons/react/20/solid';
+import React from 'react'
+import { capitalize, kebabCase } from 'lodash'
+import { type FormProps } from '../../../types/types'
+import { ExclamationCircleIcon } from '@heroicons/react/20/solid'
 
 interface InputProps extends FormProps {
-  type: string;
+  type: string
 }
 
 const Input: React.FC<InputProps> = (props) => {
-  const name = kebabCase(props.label);
+  const name = kebabCase(props.label)
   // Adapt color of the input depending on the error
-  const color = props.error != null ? 'red' : 'gray';
+  const color = props.error != null ? 'red' : 'gray'
 
   return (
     <div>
@@ -37,7 +37,7 @@ const Input: React.FC<InputProps> = (props) => {
         </p>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default Input;
+export default Input

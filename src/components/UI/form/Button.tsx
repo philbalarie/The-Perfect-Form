@@ -1,9 +1,9 @@
-import React from 'react';
-import LoadingIcon from '../LoadingIcon';
-import { EnvelopeIcon } from '@heroicons/react/20/solid';
+import React from 'react'
+import LoadingIcon from '../LoadingIcon'
+import { EnvelopeIcon } from '@heroicons/react/20/solid'
 
 interface ButtonProps {
-  loading: boolean;
+  loading: boolean
 }
 
 const Button: React.FC<ButtonProps> = (props) => {
@@ -23,7 +23,7 @@ const Button: React.FC<ButtonProps> = (props) => {
       )}
       Subscribe
     </button>
-  );
-};
+  )
+}
 
-export default Button;
+export default Button

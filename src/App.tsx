@@ -1,27 +1,32 @@
-import React, { useState } from 'react';
-import Input from './components/UI/form/Input';
-import { EMAIL, TEXT } from './constants/formTypes';
-import Select from './components/UI/form/Select';
-import { useForm } from 'react-hook-form';
-import SubscriptionService from './services/subscription.service';
-import Button from './components/UI/form/Button';
-import { v4 as uuidv4 } from 'uuid';
-import { type Subscription } from './types/types';
+import React, { useState } from 'react'
+import Input from './components/UI/form/Input'
+import { EMAIL, TEXT } from './constants/formTypes'
+import Select from './components/UI/form/Select'
+import { useForm } from 'react-hook-form'
+import SubscriptionService from './services/subscription.service'
+import Button from './components/UI/form/Button'
+import { v4 as uuidv4 } from 'uuid'
+import { type Subscription } from './types/types'
+import Toast from './components/UI/form/Toast'
 
-function App() {
+const App: React.FC = () => {
   const {
     register,
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm<Subscription>();
-  const EMAIL_PATTERN = /^\w+(-?\w+)*@\w+(-?\w+)*(\.\w{2,3})+$/;
-  const countryOptions = ['Canada', 'Mexico', 'India'];
-  const [loading, setLoading] = useState<boolean>(false);
+  } = useForm<Subscription>()
+  const EMAIL_PATTERN = /^\w+(-?\w+)*@\w+(-?\w+)*(\.\w{2,3})+$/
+  const countryOptions = ['Canada', 'Mexico', 'India']
+  const [loading, setLoading] = useState<boolean>(false)
 
-  const onSubmit = (data: Subscription) => {
-    setLoading(true);
-    const { firstName, lastName, country, emailAddress } = data;
+  const [showToast, setShowToast] = useState<boolean>(false)
+  const [toastMessage, setToastMessage] = useState<string>('')
+  const [toastType, setToastType] = useState<'success' | 'error'>('success')
+
+  const onSubmit = (data: Subscription): void => {
+    setLoading(true)
+    const { firstName, lastName, country, emailAddress } = data
 
     SubscriptionService.save({
       id: uuidv4(),
@@ -31,17 +36,24 @@ function App() {
       emailAddress,
     })
       .then((_) => {
-        reset();
-        setLoading(false);
+        reset()
+        setLoading(false)
+        setShowToast(true)
+        setToastMessage('Subscription successful!')
+        setToastType('success')
       })
       .catch((err) => {
-        console.log(err.message);
-        setLoading(false);
-      });
-  };
+        setLoading(false)
+        setShowToast(true)
+        setToastMessage(err.message)
+        setToastType('error')
+      })
+  }
 
   return (
     <div className='flex justify-center my-10 bg bg-white'>
+      <Toast type={toastType} show={showToast} message={toastMessage} setShowToast={setShowToast} />
+      {/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}
       <form className='space-y-8 divide-y divide-gray-200' onSubmit={handleSubmit(onSubmit)}>
         <div className='space-y-8 divide-y divide-gray-200'>
           <div className='pt-8'>
@@ -102,10 +114,7 @@ function App() {
           <div className='pt-8'>
             <div>
               <h3 className='text-base font-semibold leading-6 text-gray-900'>Notifications</h3>
-              <p className='mt-1 text-sm text-gray-500'>
-                We'll always let you know about important changes, but you pick what else you want
-                to hear about.
-              </p>
+              <p className='mt-1 text-sm text-gray-500'>just text</p>
             </div>
             <div className='mt-6'>
               <fieldset>
@@ -233,7 +242,7 @@ function App() {
         </div>
       </form>
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
