@@ -1,11 +1,12 @@
 import { type FieldError, type UseFormRegisterReturn } from 'react-hook-form'
 
 export interface Subscription {
-  id?: string
+  id?: undefined | string
   firstName: string
   lastName: string
   emailAddress: string
   country: string
+  honeypot?: string
 }
 
 export interface FormProps {

@@ -4,27 +4,33 @@ import { EMAIL, TEXT } from './constants/formTypes'
 import Select from './components/UI/form/Select'
 import { useForm } from 'react-hook-form'
 import SubscriptionService from './services/subscription.service'
-import Button from './components/UI/form/Button'
 import { v4 as uuidv4 } from 'uuid'
 import { type Subscription } from './types/types'
 import Toast from './components/UI/form/Toast'
-import { yupResolver } from '@hookform/resolvers/yup';
+import { yupResolver } from '@hookform/resolvers/yup'
 
-import * as yup from "yup";
-import { kebabCase } from 'lodash';
+import * as yup from 'yup'
+import { kebabCase } from 'lodash'
+import LoadingIcon from './components/UI/LoadingIcon'
+import { EnvelopeIcon } from '@heroicons/react/20/solid'
 
 const App: React.FC = () => {
   // TODO: Refactor, since COUNTRY_OPTIONS_VALUE are define here and in the select component
   const COUNTRY_OPTIONS_DISPLAY = ['Canada', 'Mexico', 'India']
-  const COUNTRY_OPTIONS_VALUE = COUNTRY_OPTIONS_DISPLAY.map(cod => kebabCase(cod))
+  const COUNTRY_OPTIONS_VALUE = COUNTRY_OPTIONS_DISPLAY.map((cod) => kebabCase(cod))
 
   // TODO Add personalized message
   // TODO: Send required prop of Input & Select dynamically with yup, instead of being hardcoded
   const schema = yup.object({
     firstName: yup.string().min(3).max(30).required(),
     lastName: yup.string().min(3).max(30).required(),
-    email: yup.string().email().required(),
-    country: yup.string().oneOf(COUNTRY_OPTIONS_VALUE).required()
+    emailAddress: yup.string().email().required(),
+    country: yup.string().oneOf(COUNTRY_OPTIONS_VALUE).required(),
+    honeypot: yup
+      .string()
+      .test('isUndefined', 'Error while validating the form', (value, context) =>
+        value !== '' ? context.createError({ message: 'Error while validating the form' }) : true,
+      ),
   })
 
   const {
@@ -71,6 +77,8 @@ const App: React.FC = () => {
       <Toast type={toastType} show={showToast} message={toastMessage} setShowToast={setShowToast} />
       {/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}
       <form className='space-y-8 divide-y divide-gray-200' onSubmit={handleSubmit(onSubmit)}>
+        <p>{errors.honeypot?.message}</p>
+        <input className='' tabIndex={-1} autoComplete='off' {...register('honeypot')} />
         <div className='space-y-8 divide-y divide-gray-200'>
           <div className='pt-8'>
             <div>
@@ -247,10 +255,21 @@ const App: React.FC = () => {
             </div>
           </div>
         </div>
-
+        {/* TODO: Change opacity when disabled */}
         <div className='pt-5'>
           <div className='flex justify-end'>
-            <Button loading={loading} />
+            <button
+              disabled={loading}
+              type='submit'
+              className={`inline-flex items-center gap-x-1.5 rounded-md bg-indigo-600 py-2.5 px-3.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600`}
+            >
+              {loading ? (
+                <LoadingIcon />
+              ) : (
+                <EnvelopeIcon className='-ml-0.5 h-5 w-5' aria-hidden='true' />
+              )}
+              Subscribe
+            </button>
           </div>
         </div>
       </form>

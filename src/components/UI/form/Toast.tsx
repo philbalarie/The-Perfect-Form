@@ -11,7 +11,7 @@ interface ToastProps {
   setShowToast: Dispatch<SetStateAction<boolean>>
 }
 
-const Toast: React.FC<ToastProps> = props => {
+const Toast: React.FC<ToastProps> = (props) => {
   const icon =
     props.type === 'success' ? (
       <CheckCircleIcon className='h-6 w-6 text-green-400' aria-hidden='true' />
