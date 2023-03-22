@@ -19,6 +19,7 @@ const App: React.FC = () => {
   const COUNTRY_OPTIONS_VALUE = COUNTRY_OPTIONS_DISPLAY.map(cod => kebabCase(cod))
 
   // TODO Add personalized message
+  // TODO: Send required prop of Input & Select dynamically with yup, instead of being hardcoded
   const schema = yup.object({
     firstName: yup.string().min(3).max(30).required(),
     lastName: yup.string().min(3).max(30).required(),
