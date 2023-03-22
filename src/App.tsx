@@ -8,43 +8,36 @@ import { v4 as uuidv4 } from 'uuid'
 import { type Subscription } from './types/types'
 import Toast from './components/UI/form/Toast'
 import { yupResolver } from '@hookform/resolvers/yup'
+import Button from './components/UI/form/Button'
+import { formSchema } from './validation/formValidation'
 
-import * as yup from 'yup'
-import { kebabCase } from 'lodash'
-import LoadingIcon from './components/UI/LoadingIcon'
-import { EnvelopeIcon } from '@heroicons/react/20/solid'
+export const COUNTRY_OPTIONS_DISPLAY = ['Canada', 'Mexico', 'India']
+
+type ToastType = 'success' | 'error'
 
 const App: React.FC = () => {
-  // TODO: Refactor, since COUNTRY_OPTIONS_VALUE are define here and in the select component
-  const COUNTRY_OPTIONS_DISPLAY = ['Canada', 'Mexico', 'India']
-  const COUNTRY_OPTIONS_VALUE = COUNTRY_OPTIONS_DISPLAY.map((cod) => kebabCase(cod))
-
-  // TODO Add personalized message
-  // TODO: Send required prop of Input & Select dynamically with yup, instead of being hardcoded
-  const schema = yup.object({
-    firstName: yup.string().min(3).max(30).required(),
-    lastName: yup.string().min(3).max(30).required(),
-    emailAddress: yup.string().email().required(),
-    country: yup.string().oneOf(COUNTRY_OPTIONS_VALUE).required(),
-    honeypot: yup
-      .string()
-      .test('isUndefined', 'Error while validating the form', (value, context) =>
-        value !== '' ? context.createError({ message: 'Error while validating the form' }) : true,
-      ),
-  })
-
   const {
     register,
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm<Subscription>({ resolver: yupResolver(schema) })
+  } = useForm<Subscription>({ resolver: yupResolver(formSchema) })
 
   const [loading, setLoading] = useState<boolean>(false)
 
   const [showToast, setShowToast] = useState<boolean>(false)
   const [toastMessage, setToastMessage] = useState<string>('')
-  const [toastType, setToastType] = useState<'success' | 'error'>('success')
+  const [toastType, setToastType] = useState<ToastType>('success')
+
+  const setAfterPost = (toastType: ToastType) => (toastMessage: string) => {
+    setLoading(false)
+    setShowToast(true)
+    setToastMessage(toastMessage)
+    setToastType(toastType)
+  }
+
+  const setSuccess = setAfterPost('success')
+  const setError = setAfterPost('error')
 
   const onSubmit = (data: Subscription): void => {
     setLoading(true)
@@ -59,16 +52,10 @@ const App: React.FC = () => {
     })
       .then((_) => {
         reset()
-        setLoading(false)
-        setShowToast(true)
-        setToastMessage('Subscription successful!')
-        setToastType('success')
+        setSuccess('Subscription successful!')
       })
       .catch((err) => {
-        setLoading(false)
-        setShowToast(true)
-        setToastMessage(err.message)
-        setToastType('error')
+        setError(err.message)
       })
   }
 
@@ -77,7 +64,6 @@ const App: React.FC = () => {
       <Toast type={toastType} show={showToast} message={toastMessage} setShowToast={setShowToast} />
       {/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}
       <form className='space-y-8 divide-y divide-gray-200' onSubmit={handleSubmit(onSubmit)}>
-        <p>{errors.honeypot?.message}</p>
         <input className='hidden' tabIndex={-1} autoComplete='off' {...register('honeypot')} />
         <div className='space-y-8 divide-y divide-gray-200'>
           <div className='pt-8'>
@@ -99,7 +85,7 @@ const App: React.FC = () => {
                   required={true}
                 />
               </div>
-
+              {/* Use required from schema instead of hardcoded */}
               <div className='sm:col-span-3'>
                 <Input
                   type={TEXT}
@@ -132,21 +118,9 @@ const App: React.FC = () => {
             </div>
           </div>
         </div>
-        {/* TODO: Change opacity when disabled */}
         <div className='pt-5'>
           <div className='flex justify-end'>
-            <button
-              disabled={loading}
-              type='submit'
-              className={`inline-flex items-center gap-x-1.5 rounded-md bg-indigo-600 py-2.5 px-3.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600`}
-            >
-              {loading ? (
-                <LoadingIcon />
-              ) : (
-                <EnvelopeIcon className='-ml-0.5 h-5 w-5' aria-hidden='true' />
-              )}
-              Subscribe
-            </button>
+            <Button loading={loading} />
           </div>
         </div>
       </form>

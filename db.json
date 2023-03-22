@@ -6,6 +6,13 @@
       "lastName": "asdadas",
       "country": "canada",
       "emailAddress": "ddadsdas@gmail.com"
+    },
+    {
+      "id": "b1d01c9e-3ecc-444d-8ddc-9ec342794545",
+      "firstName": "Philippe",
+      "lastName": "Alarie",
+      "country": "canada",
+      "emailAddress": "philbalarie@gmail.com"
     }
   ]
 }
