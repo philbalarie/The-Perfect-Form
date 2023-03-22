@@ -8,16 +8,31 @@ import Button from './components/UI/form/Button'
 import { v4 as uuidv4 } from 'uuid'
 import { type Subscription } from './types/types'
 import Toast from './components/UI/form/Toast'
+import { yupResolver } from '@hookform/resolvers/yup';
+
+import * as yup from "yup";
+import { kebabCase } from 'lodash';
 
 const App: React.FC = () => {
+  // TODO: Refactor, since COUNTRY_OPTIONS_VALUE are define here and in the select component
+  const COUNTRY_OPTIONS_DISPLAY = ['Canada', 'Mexico', 'India']
+  const COUNTRY_OPTIONS_VALUE = COUNTRY_OPTIONS_DISPLAY.map(cod => kebabCase(cod))
+
+  // TODO Add personalized message
+  const schema = yup.object({
+    firstName: yup.string().min(3).max(30).required(),
+    lastName: yup.string().min(3).max(30).required(),
+    email: yup.string().email().required(),
+    country: yup.string().oneOf(COUNTRY_OPTIONS_VALUE).required()
+  })
+
   const {
     register,
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm<Subscription>()
-  const EMAIL_PATTERN = /^\w+(-?\w+)*@\w+(-?\w+)*(\.\w{2,3})+$/
-  const countryOptions = ['Canada', 'Mexico', 'India']
+  } = useForm<Subscription>({ resolver: yupResolver(schema) })
+
   const [loading, setLoading] = useState<boolean>(false)
 
   const [showToast, setShowToast] = useState<boolean>(false)
@@ -70,7 +85,7 @@ const App: React.FC = () => {
                 <Input
                   type={TEXT}
                   label={'First name'}
-                  register={register('firstName', { required: 'First name is required' })}
+                  register={register('firstName')}
                   error={errors.firstName}
                   required={true}
                 />
@@ -80,7 +95,7 @@ const App: React.FC = () => {
                 <Input
                   type={TEXT}
                   label={'Last name'}
-                  register={register('lastName', { required: 'Last name is required' })}
+                  register={register('lastName')}
                   error={errors.lastName}
                   required={true}
                 />
@@ -90,10 +105,7 @@ const App: React.FC = () => {
                 <Input
                   type={EMAIL}
                   label={'Email address'}
-                  register={register('emailAddress', {
-                    required: 'Email Address is required',
-                    pattern: { value: EMAIL_PATTERN, message: 'Email address is not valid' },
-                  })}
+                  register={register('emailAddress')}
                   error={errors.emailAddress}
                   required={true}
                 />
@@ -102,8 +114,8 @@ const App: React.FC = () => {
               <div className='sm:col-span-3'>
                 <Select
                   label={'Country'}
-                  options={countryOptions}
-                  register={register('country', { required: 'Country is required' })}
+                  options={COUNTRY_OPTIONS_DISPLAY}
+                  register={register('country')}
                   error={errors.country}
                   required={true}
                 />

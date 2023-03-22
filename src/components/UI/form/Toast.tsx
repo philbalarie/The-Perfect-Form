@@ -2,6 +2,7 @@ import React, { type Dispatch, Fragment, type SetStateAction } from 'react'
 import { Transition } from '@headlessui/react'
 import { ExclamationCircleIcon, CheckCircleIcon } from '@heroicons/react/24/outline'
 import { XMarkIcon } from '@heroicons/react/20/solid'
+import { capitalize } from 'lodash'
 
 interface ToastProps {
   type: 'success' | 'error'
@@ -10,7 +11,7 @@ interface ToastProps {
   setShowToast: Dispatch<SetStateAction<boolean>>
 }
 
-const Toast: React.FC<ToastProps> = (props) => {
+const Toast: React.FC<ToastProps> = props => {
   const icon =
     props.type === 'success' ? (
       <CheckCircleIcon className='h-6 w-6 text-green-400' aria-hidden='true' />
@@ -20,13 +21,11 @@ const Toast: React.FC<ToastProps> = (props) => {
   const title = props.type === 'success' ? 'Success' : 'Error'
   return (
     <>
-      {/* Global notification live region, render this permanently at the end of the document */}
       <div
         aria-live='assertive'
         className='pointer-events-none fixed inset-0 flex items-end px-4 py-6 sm:items-start sm:p-6 z-50'
       >
         <div className='flex w-full flex-col items-center space-y-4 sm:items-end'>
-          {/* Notification panel, dynamically insert this into the live region when it needs to be displayed */}
           <Transition
             show={props.show}
             as={Fragment}
@@ -42,8 +41,8 @@ const Toast: React.FC<ToastProps> = (props) => {
                 <div className='flex items-start'>
                   <div className='flex-shrink-0'>{icon}</div>
                   <div className='ml-3 w-0 flex-1 pt-0.5'>
-                    <p className='text-sm font-medium text-gray-900'>{title}</p>
-                    <p className='mt-1 text-sm text-gray-500'>{props.message}</p>
+                    <p className='text-sm font-medium text-gray-900'>{capitalize(title)}</p>
+                    <p className='mt-1 text-sm text-gray-500'>{capitalize(props.message)}</p>
                   </div>
                   <div className='ml-4 flex flex-shrink-0'>
                     <button
