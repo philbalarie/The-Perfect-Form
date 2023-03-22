@@ -78,7 +78,7 @@ const App: React.FC = () => {
       {/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}
       <form className='space-y-8 divide-y divide-gray-200' onSubmit={handleSubmit(onSubmit)}>
         <p>{errors.honeypot?.message}</p>
-        <input className='' tabIndex={-1} autoComplete='off' {...register('honeypot')} />
+        <input className='hidden' tabIndex={-1} autoComplete='off' {...register('honeypot')} />
         <div className='space-y-8 divide-y divide-gray-200'>
           <div className='pt-8'>
             <div>
